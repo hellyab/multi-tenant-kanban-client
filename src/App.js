@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-import SignInComponent from "./components/sign-in/sign-in-component";
 import {createMuiTheme} from '@material-ui/core/styles'
 import {ThemeProvider} from "@material-ui/styles";
+import SignInSignUp from "./pages/sign-in-sign-up";
 
 function App() {
     const theme = createMuiTheme();
@@ -12,7 +12,7 @@ function App() {
         <ThemeProvider theme={theme}>
             <Router>
                 <Switch>
-                    <Route path="/" exact={true} render={() => <SignInComponent loginLink={'/login'}/>}/>
+                    <Route path="/" render={() => <SignInSignUp/>}/>
                     <Route path='*' component={FourOhFour}/>
                 </Switch>
             </Router>

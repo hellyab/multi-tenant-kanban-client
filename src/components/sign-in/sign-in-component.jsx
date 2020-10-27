@@ -1,5 +1,4 @@
 import React from "react";
-import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
@@ -41,12 +40,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'block',
         textAlign: 'center'
     },
-    cardContainer: {
-        display: 'flex',
-        justifyItems: 'center',
-        alignItems: 'center',
-        height: '100vh',
-    },
     image: {
         height: 200,
         [theme.breakpoints.down('xs')]: {
@@ -55,10 +48,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function SignInComponent({loginLink}) {
+export default function SignInComponent() {
     const classes = useStyles();
     return (
-        <Container component="main" maxWidth="xs" className={classes.cardContainer}>
+
             <Card >
                 <CardMedia
                     className={classes.image}
@@ -107,6 +100,5 @@ export default function SignInComponent({loginLink}) {
                         </form>
                     </div>
                 </CardContent>
-            </Card>
-        </Container>)
+            </Card>)
 }
