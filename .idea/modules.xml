@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../multi-tenant-kanban-api/.idea/multi-tenant-kanban-api.iml" filepath="$PROJECT_DIR$/../multi-tenant-kanban-api/.idea/multi-tenant-kanban-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/multi-tenant-kanban-client.iml" filepath="$PROJECT_DIR$/.idea/multi-tenant-kanban-client.iml" />
     </modules>
   </component>

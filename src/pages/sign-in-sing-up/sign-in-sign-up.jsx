@@ -14,8 +14,9 @@ const useStyle = makeStyles((theme) => (
         root: {
             flexGrow: 1,
             margin: 0,
-            padding:0,
-            paddingBottom: theme.spacing(3),
+            padding: 0,
+            width: '100%',
+            maxWidth: '100%'
         },
         container: {
             display: 'flex',
@@ -44,7 +45,7 @@ export default function SignInSignUp() {
 
     return (
         <Container className={classes.root}>
-            <AppBar position="static">
+            <AppBar position="static" style={{width: "100%"}}>
                 <Toolbar>
                     <IconButton>
                         <AssignmentTurnedInRoundedIcon style={{color: "white"}}/>
@@ -74,7 +75,7 @@ export default function SignInSignUp() {
                     </Switch>
                 </Router>
             </Container>
-            <CopyrightComponent />
+            <CopyrightComponent/>
         </Container>
     );
 }
