@@ -45,12 +45,12 @@ export const _axios = (config) =>
 
 //TASK BOARDS
 export const boards = [
-  {name: "Backlog"},
-  {name: "To do"},
-  {name: "In progress"},
-  {name: "Under review"},
-  {name: "Done"},
-  {name: "Archive"},
+  { name: "Backlog" },
+  { name: "To do" },
+  { name: "In progress" },
+  { name: "Under review" },
+  { name: "Done" },
+  { name: "Archive" },
 ];
 
 //USE PREVIOUS
