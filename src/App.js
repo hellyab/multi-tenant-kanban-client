@@ -1,22 +1,46 @@
-import React from 'react';
-import './App.css';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import React from "react";
+import "./App.css";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import SignInSignUp from "./pages/sign-in-sing-up/sign-in-sign-up";
 import Dashboard from "./pages/dashboard/dashboard";
+import PrivateRouteComponent from "./components/private-route/private-route-component";
+import { setAuthHeader } from "./services/auth-service";
 
 function App() {
-    const FourOhFour = () => <div>404: Page not found</div>;
-    return (
-            <Router>
-                <Switch>
-                    <Route path="/sign-up" exact={true} component={SignInSignUp}/>
-                    <Route path="/sign-in" exact={true} component={SignInSignUp}/>
-                    <Route path="/dashboard" exact={true} component={Dashboard}/>
-                    <Route path='*' component={FourOhFour}/>
-                </Switch>
-            </Router>
-
-    );
+  const FourOhFour = () => <div>404: Page not found</div>;
+  setAuthHeader(localStorage.getItem("token"));
+  return (
+    <Router>
+      <Switch>
+        <Route
+          path="/"
+          exact={true}
+          render={() => <Redirect to="/sign-in" />}
+        />
+        <Route
+          path="/sign-up"
+          exact={true}
+          render={(props) => <SignInSignUp {...props} />}
+        />
+        <Route
+          path="/sign-in"
+          exact={true}
+          render={(props) => <SignInSignUp {...props} />}
+        />
+        <PrivateRouteComponent
+          path="/dashboard"
+          exact={true}
+          render={(props) => <Dashboard {...props} />}
+        />
+        <Route path="*" component={FourOhFour} />
+      </Switch>
+    </Router>
+  );
 }
 
 export default App;

@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Container,
   GridList,
@@ -7,7 +8,7 @@ import {
   isWidthUp,
 } from "@material-ui/core";
 import BoardComponent from "../../components/board/board-component";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
@@ -20,25 +21,26 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import useTheme from "@material-ui/core/styles/useTheme";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddTaskIcon from "@material-ui/icons/PlaylistAddRounded";
-import {getUserTenants} from "../../services/user-tenant-service";
-import {boards, usePrevious, userId} from "../../services/constants";
+import { getUserTenants } from "../../services/user-tenant-service";
+import { boards, usePrevious, userId } from "../../services/constants";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import {getUserInfoFromToken} from "../../services/user-detail-service";
-import {getTasks} from "../../services/task-service";
+import { getUserInfoFromToken } from "../../services/user-detail-service";
+import { getTasks } from "../../services/task-service";
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import AddTaskComponent from "../../components/add-task/add-task-component";
 import _ from "lodash";
+import { PowerSettingsNewRounded } from "@material-ui/icons";
 
 function useWidth() {
   const theme = useTheme();
   const keys = [...theme.breakpoints.keys].reverse();
   return (
-      keys.reduce((output, key) => {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const matches = useMediaQuery(theme.breakpoints.up(key));
-        return !output && matches ? key : output;
-      }, null) || "xs"
+    keys.reduce((output, key) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const matches = useMediaQuery(theme.breakpoints.up(key));
+      return !output && matches ? key : output;
+    }, null) || "xs"
   );
 }
 
@@ -46,13 +48,14 @@ const drawerWidth = 250;
 const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
 //CONTEXT
-export const TaskMovedContext = React.createContext({});
+export const TaskChangedContext = React.createContext({});
 
 export default function Dashboard() {
   const useStyles = makeStyles((theme) => ({
     rootContainer: {
       padding: 0,
       overflowX: "hidden",
+      maxWidth: "100%",
     },
     boardsContainer: {
       flexWrap: "nowrap",
@@ -85,7 +88,7 @@ export default function Dashboard() {
 
   const width = useWidth();
 
-  const taskMovedHandler = (source, destination) => {
+  const taskChangedHandler = (source, destination) => {
     console.log(source, destination);
     if (source === boards[0].name || destination === boards[0].name) {
       setBacklogChanged((prevState) => prevState + 1);
@@ -94,53 +97,87 @@ export default function Dashboard() {
     if (source === boards[1].name || destination === boards[1].name) {
       setTodoChanged((prevState) => prevState + 1);
     }
+
+    if (source === boards[2].name || destination === boards[2].name) {
+      setInProgressChanged((prevState) => prevState + 1);
+    }
+
+    if (source === boards[3].name || destination === boards[3].name) {
+      setUnderReviewChanged((prevState) => prevState + 1);
+    }
+
+    if (source === boards[4].name || destination === boards[4].name) {
+      setDoneChanged((prevState) => prevState + 1);
+    }
+
+    if (source === boards[5].name || destination === boards[5].name) {
+      setArchiveChanged((prevState) => prevState + 1);
+    }
   };
 
+  const history = useHistory();
+
   //STATE
+  const [currentTenant, setCurrentTenant] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [drawerVisibility, setDrawerVisibility] = useState(false);
-  const [loadingTenants, setLoadingTenants] = useState(false);
-  const [currentTenant, setCurrentTenant] = useState({});
-  const [todoTasks, setTodoTasks] = useState([]);
-  const [backlogTasks, setBacklogTasks] = useState([]);
-  const [userTenants, setUserTenants] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [toastOpen, setToastOpen] = useState(false);
   const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loadingTenants, setLoadingTenants] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [userTenants, setUserTenants] = useState([]);
+
+  //STATE.Tasks
+  const [backlogTasks, setBacklogTasks] = useState([]);
+  const [todoTasks, setTodoTasks] = useState([]);
+  const [inProgressTasks, setInProgressTasks] = useState([]);
+  const [underReviewTasks, setUnderReviewTasks] = useState([]);
+  const [doneTasks, setDoneTasks] = useState([]);
+  const [archiveTasks, setArchiveTasks] = useState([]);
+
+  //STATE.TaskChangeTrackers
 
   const [backlogChanged, setBacklogChanged] = useState(0);
   const [todoChanged, setTodoChanged] = useState(0);
-
-  const onDialogClose = (board) => {
-    setDialogOpen(false);
-    if (board === boards[0].name) {
-      setBacklogChanged((prevBacklogChanged) => prevBacklogChanged + 1);
-    } else if (board === boards[1].name) {
-      setTodoChanged((prevTodoChanged) => prevTodoChanged + 1);
-    }
-  };
+  const [inProgressChanged, setInProgressChanged] = useState([]);
+  const [underReviewChanged, setUnderReviewChanged] = useState([]);
+  const [doneChanged, setDoneChanged] = useState([]);
+  const [archiveChanged, setArchiveChanged] = useState([]);
 
   const prevTenant = usePrevious(currentTenant);
+  const prevTenants = usePrevious(userTenants);
 
+  //UserTenant effect
   useEffect(() => {
-    if (!_.isEqual(prevTenant, currentTenant)) {
+    if (
+      !_.isEqual(prevTenants, userTenants) &&
+      !_.isEqual(prevTenant, currentTenant)
+    ) {
       setLoadingTenants(true);
-      getUserTenants(userId)
-          .then((res) => {
-            setUserTenants(() => res);
-            const user = getUserInfoFromToken();
-            setCurrentTenant(() =>
-                res.find((tenant) => tenant.id === user.defaultTenant)
-            );
-          })
-          //TODO: add alert
-          .catch(() => setUserTenants([]))
-          .finally(() => setLoadingTenants(false));
+      getUserTenants(userId())
+        .then((res) => {
+          setUserTenants(() => res);
+          const user = getUserInfoFromToken();
+          setCurrentTenant(() =>
+            res.find((tenant) => tenant.id === user.defaultTenant)
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          setUserTenants([]);
+          setCurrentTenant({});
+          setErrorMessage(error);
+          setError(true);
+          setToastOpen(true);
+        })
+        .finally(() => setLoadingTenants(false));
     }
-  }, [currentTenant, prevTenant]);
+  }, [prevTenants, userTenants, currentTenant, prevTenant]);
 
+  //Backlog effect
   useEffect(() => {
-    getTasks(currentTenant.id, boards[0].name)
+    if (!_.isEmpty(currentTenant)) {
+      getTasks(currentTenant.id, boards[0].name)
         .then((res) => {
           console.log(res);
           setBacklogTasks(res);
@@ -151,42 +188,94 @@ export default function Dashboard() {
           setToastOpen(true);
           setBacklogTasks([]);
         });
+    }
   }, [currentTenant, backlogChanged]);
 
+  //Todos effect
   useEffect(() => {
-    getTasks(currentTenant.id, boards[1].name)
-        .then((res) => {
-          console.log(res);
-          setTodoTasks(res);
-        })
-        .catch((e) => {
-          setErrorMessage(e.toString());
-          setError(true);
-          setToastOpen(true);
-          setTodoTasks([]);
-        });
+    if (!_.isEmpty(currentTenant)) {
+      getTasks(currentTenant.id, boards[1].name)
+          .then((res) => {
+            console.log(res);
+            setTodoTasks(res);
+          })
+          .catch((e) => {
+            setErrorMessage(e.toString());
+            setError(true);
+            setToastOpen(true);
+            setTodoTasks([]);
+          });
+    }
   }, [currentTenant, todoChanged]);
 
-  const _tasksMock = [
-    {
-      id: "a",
-      title: "Finish this kanban",
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vulputate placerat nunc vel pretium. In varius pretium nunc, sed porta turpis vestibulum eget. Fusce tempor commodo quam id consequat. Phasellus sed dui pellentesque, mollis mauris quis, tincidunt augue. Phasellus quis eros quis tellus hendrerit efficitur eget sit amet quam. Donec quis eros neque. Suspendisse rhoncus erat eget nulla posuere, sed mollis ante volutpat. Aliquam non nisi tellus. Proin tincidunt a sem nec dapibus. Nullam risus massa, tempus at justo fermentum, sollicitudin aliquet urna. Aliquam tristique leo id lectus faucibus pharetra.",
-    },
-    {
-      id: "b",
-      title: "Deploy this kanban",
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vulputate placerat nunc vel pretium. In varius pretium nunc, sed porta turpis vestibulum eget. Fusce tempor commodo quam id consequat. Phasellus sed dui pellentesque, mollis mauris quis, tincidunt augue. Phasellus quis eros quis tellus hendrerit efficitur eget sit amet quam. Donec quis eros neque. Suspendisse rhoncus erat eget nulla posuere, sed mollis ante volutpat. Aliquam non nisi tellus. Proin tincidunt a sem nec dapibus. Nullam risus massa, tempus at justo fermentum, sollicitudin aliquet urna. Aliquam tristique leo id lectus faucibus pharetra.",
-    },
-    {
-      id: "c",
-      title: "Connect this kanban to the API",
-      description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vulputate placerat nunc vel pretium. In varius pretium nunc, sed porta turpis vestibulum eget. Fusce tempor commodo quam id consequat. Phasellus sed dui pellentesque, mollis mauris quis, tincidunt augue. Phasellus quis eros quis tellus hendrerit efficitur eget sit amet quam. Donec quis eros neque. Suspendisse rhoncus erat eget nulla posuere, sed mollis ante volutpat. Aliquam non nisi tellus. Proin tincidunt a sem nec dapibus. Nullam risus massa, tempus at justo fermentum, sollicitudin aliquet urna. Aliquam tristique leo id lectus faucibus pharetra.",
-    },
-  ];
+  //In-Progress effect
+  useEffect(() => {
+    if (!_.isEmpty(currentTenant)) {
+      getTasks(currentTenant.id, boards[2].name)
+          .then((res) => {
+            console.log(res);
+            setInProgressTasks(res);
+          })
+          .catch((e) => {
+            setErrorMessage(e.toString());
+            setError(true);
+            setToastOpen(true);
+            setInProgressTasks([]);
+          });
+    }
+  }, [currentTenant, inProgressChanged]);
+
+  //Under Review effect
+  useEffect(() => {
+    if (!_.isEmpty(currentTenant)) {
+      getTasks(currentTenant.id, boards[3].name)
+          .then((res) => {
+            console.log(res);
+            setUnderReviewTasks(res);
+          })
+          .catch((e) => {
+            setErrorMessage(e.toString());
+            setError(true);
+            setToastOpen(true);
+            setUnderReviewTasks([]);
+          });
+    }
+  }, [currentTenant, underReviewChanged]);
+
+  //Done effect
+  useEffect(() => {
+    if (!_.isEmpty(currentTenant)) {
+      getTasks(currentTenant.id, boards[4].name)
+          .then((res) => {
+            console.log(res);
+            setDoneTasks(res);
+          })
+          .catch((e) => {
+            setErrorMessage(e.toString());
+            setError(true);
+            setToastOpen(true);
+            setDoneTasks([]);
+          });
+    }
+  }, [currentTenant, doneChanged]);
+
+  //Archive effect
+  useEffect(() => {
+    if (!_.isEmpty(currentTenant)) {
+      console.log(currentTenant);
+      getTasks(currentTenant.id, boards[5].name)
+          .then((res) => {
+            console.log(res);
+            setArchiveTasks(res);
+          })
+          .catch((e) => {
+            setErrorMessage(e.toString());
+            setError(true);
+            setToastOpen(true);
+            setArchiveTasks([]);
+          });
+    }
+  }, [currentTenant, archiveChanged]);
 
   const getGridListCols = () => {
     if (isWidthUp("xl", width)) {
@@ -211,9 +300,19 @@ export default function Dashboard() {
             <IconButton onClick={() => setDrawerVisibility(!drawerVisibility)}>
               <MenuRoundedIcon style={{color: "white"}}/>
             </IconButton>
-            <IconButton onClick={() => setDialogOpen(true)}>
-              <AddTaskIcon style={{color: "white"}}/>
-            </IconButton>
+            <Toolbar style={{padding: 0}}>
+              <IconButton onClick={() => setDialogOpen(true)}>
+                <AddTaskIcon style={{color: "white"}}/>
+              </IconButton>
+              <IconButton
+                  onClick={() => {
+                    localStorage.clear();
+                    history.push("/");
+                  }}
+              >
+                <PowerSettingsNewRounded style={{color: "white"}}/>
+              </IconButton>
+            </Toolbar>
           </Toolbar>
         </AppBar>
         <SwipeableDrawer
@@ -233,7 +332,7 @@ export default function Dashboard() {
                     <ListItem
                         button
                         key={tenant.id}
-                        selected={tenant.id === currentTenant.id}
+                        selected={tenant.id === currentTenant.id || false}
                         onClick={() => setCurrentTenant(tenant)}
                     >
                       <ListItemIcon>
@@ -245,38 +344,39 @@ export default function Dashboard() {
               </List>
           )}
         </SwipeableDrawer>
-        <TaskMovedContext.Provider value={taskMovedHandler}>
+        <TaskChangedContext.Provider value={taskChangedHandler}>
           <GridList
               className={classes.boardsContainer}
               cellHeight="auto"
               cols={getGridListCols()}
           >
             <GridListTile key={boards[0].name}>
-              <BoardComponent tasks={backlogTasks} title="Backlog"/>
+              <BoardComponent tasks={backlogTasks} title={boards[0].name}/>
             </GridListTile>
             <GridListTile key={boards[1].name}>
-              <BoardComponent tasks={todoTasks} title="To do"/>
+              <BoardComponent tasks={todoTasks} title={boards[1].name}/>
             </GridListTile>
             <GridListTile key={boards[2].name}>
-              <BoardComponent tasks={_tasksMock} title="In progress"/>
+              <BoardComponent tasks={inProgressTasks} title={boards[2].name}/>
             </GridListTile>
             <GridListTile key={boards[3].name}>
-              <BoardComponent tasks={_tasksMock} title="Under review"/>
+              <BoardComponent tasks={underReviewTasks} title={boards[3].name}/>
             </GridListTile>
             <GridListTile key={boards[4].name}>
-              <BoardComponent tasks={_tasksMock} title="Done"/>
+              <BoardComponent tasks={doneTasks} title={boards[4].name}/>
             </GridListTile>
             <GridListTile key={boards[5].name}>
-              <BoardComponent tasks={_tasksMock} title="Archive"/>
+              <BoardComponent tasks={archiveTasks} title={boards[5].name}/>
             </GridListTile>
           </GridList>
-        </TaskMovedContext.Provider>
 
-        <AddTaskComponent
-            onDialogClose={onDialogClose}
-            dialogOpen={dialogOpen}
-            currentTenantId={currentTenant.id}
-        />
+          <AddTaskComponent
+              onDialogClose={() => setDialogOpen(false)}
+              dialogOpen={dialogOpen}
+              currentTenantId={currentTenant.id || ""}
+          />
+        </TaskChangedContext.Provider>
+
         <Snackbar
             open={toastOpen}
             autoHideDuration={error ? 6000 : 2000}

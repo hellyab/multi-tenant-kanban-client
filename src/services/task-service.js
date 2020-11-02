@@ -1,11 +1,8 @@
-import {_axios, authorizationHeader} from "./constants";
+import { _axios } from "./constants";
 
 export const getTasks = (tenantId, taskColumn) => {
   const request = {
     url: `${process.env.REACT_APP_API_URL}/tasks`,
-    headers: {
-      ...authorizationHeader,
-    },
     method: "get",
     params: {
       filter: {
@@ -22,9 +19,6 @@ export const getTasks = (tenantId, taskColumn) => {
 export const createTask = (task) => {
   const request = {
     url: `${process.env.REACT_APP_API_URL}/tasks`,
-    headers: {
-      ...authorizationHeader,
-    },
     method: "post",
     data: task,
   };
@@ -34,9 +28,6 @@ export const createTask = (task) => {
 export const updateTask = (task) => {
   const request = {
     url: `${process.env.REACT_APP_API_URL}/tasks/${task.id}`,
-    headers: {
-      ...authorizationHeader,
-    },
     method: "patch",
     data: task,
   };
