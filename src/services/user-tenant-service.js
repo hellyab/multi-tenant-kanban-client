@@ -1,6 +1,7 @@
-import { _axios } from "./constants";
+import { _axios, userId } from "./constants";
 
 export const getUserTenants = (id) => {
+  console.log(userId());
   const request = {
     url: `${process.env.REACT_APP_API_URL}/user-tenants`,
     method: "get",
@@ -27,7 +28,7 @@ export const getUserTenants = (id) => {
             filter: {
               where: {
                 or: res.map((userTenant) => ({
-                  tenantId: userTenant.tenantId,
+                  id: userTenant.tenantId,
                 })),
               },
               fields: {
@@ -38,6 +39,7 @@ export const getUserTenants = (id) => {
             },
           },
         };
+        console.log(tenantsRequest);
         return _axios(tenantsRequest);
       } else {
         return Promise.resolve([]);

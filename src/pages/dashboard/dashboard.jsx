@@ -24,7 +24,7 @@ import AddTaskIcon from "@material-ui/icons/PlaylistAddRounded";
 import { getUserTenants } from "../../services/user-tenant-service";
 import { boards, usePrevious, userId } from "../../services/constants";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { getUserInfoFromToken } from "../../services/user-detail-service";
+import { getUserInfoFromToken } from "../../services/user-service";
 import { getTasks } from "../../services/task-service";
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -195,16 +195,16 @@ export default function Dashboard() {
   useEffect(() => {
     if (!_.isEmpty(currentTenant)) {
       getTasks(currentTenant.id, boards[1].name)
-          .then((res) => {
-            console.log(res);
-            setTodoTasks(res);
-          })
-          .catch((e) => {
-            setErrorMessage(e.toString());
-            setError(true);
-            setToastOpen(true);
-            setTodoTasks([]);
-          });
+        .then((res) => {
+          console.log(res);
+          setTodoTasks(res);
+        })
+        .catch((e) => {
+          setErrorMessage(e.toString());
+          setError(true);
+          setToastOpen(true);
+          setTodoTasks([]);
+        });
     }
   }, [currentTenant, todoChanged]);
 
@@ -212,16 +212,16 @@ export default function Dashboard() {
   useEffect(() => {
     if (!_.isEmpty(currentTenant)) {
       getTasks(currentTenant.id, boards[2].name)
-          .then((res) => {
-            console.log(res);
-            setInProgressTasks(res);
-          })
-          .catch((e) => {
-            setErrorMessage(e.toString());
-            setError(true);
-            setToastOpen(true);
-            setInProgressTasks([]);
-          });
+        .then((res) => {
+          console.log(res);
+          setInProgressTasks(res);
+        })
+        .catch((e) => {
+          setErrorMessage(e.toString());
+          setError(true);
+          setToastOpen(true);
+          setInProgressTasks([]);
+        });
     }
   }, [currentTenant, inProgressChanged]);
 
@@ -229,16 +229,16 @@ export default function Dashboard() {
   useEffect(() => {
     if (!_.isEmpty(currentTenant)) {
       getTasks(currentTenant.id, boards[3].name)
-          .then((res) => {
-            console.log(res);
-            setUnderReviewTasks(res);
-          })
-          .catch((e) => {
-            setErrorMessage(e.toString());
-            setError(true);
-            setToastOpen(true);
-            setUnderReviewTasks([]);
-          });
+        .then((res) => {
+          console.log(res);
+          setUnderReviewTasks(res);
+        })
+        .catch((e) => {
+          setErrorMessage(e.toString());
+          setError(true);
+          setToastOpen(true);
+          setUnderReviewTasks([]);
+        });
     }
   }, [currentTenant, underReviewChanged]);
 
@@ -246,16 +246,16 @@ export default function Dashboard() {
   useEffect(() => {
     if (!_.isEmpty(currentTenant)) {
       getTasks(currentTenant.id, boards[4].name)
-          .then((res) => {
-            console.log(res);
-            setDoneTasks(res);
-          })
-          .catch((e) => {
-            setErrorMessage(e.toString());
-            setError(true);
-            setToastOpen(true);
-            setDoneTasks([]);
-          });
+        .then((res) => {
+          console.log(res);
+          setDoneTasks(res);
+        })
+        .catch((e) => {
+          setErrorMessage(e.toString());
+          setError(true);
+          setToastOpen(true);
+          setDoneTasks([]);
+        });
     }
   }, [currentTenant, doneChanged]);
 
@@ -264,16 +264,16 @@ export default function Dashboard() {
     if (!_.isEmpty(currentTenant)) {
       console.log(currentTenant);
       getTasks(currentTenant.id, boards[5].name)
-          .then((res) => {
-            console.log(res);
-            setArchiveTasks(res);
-          })
-          .catch((e) => {
-            setErrorMessage(e.toString());
-            setError(true);
-            setToastOpen(true);
-            setArchiveTasks([]);
-          });
+        .then((res) => {
+          console.log(res);
+          setArchiveTasks(res);
+        })
+        .catch((e) => {
+          setErrorMessage(e.toString());
+          setError(true);
+          setToastOpen(true);
+          setArchiveTasks([]);
+        });
     }
   }, [currentTenant, archiveChanged]);
 
@@ -291,105 +291,105 @@ export default function Dashboard() {
     return 1;
   };
   return (
-      <Container className={classes.rootContainer}>
-        <AppBar
-            position="static"
-            className={drawerVisibility ? classes.appBar : ""}
-        >
-          <Toolbar className={classes.appBarToolbar}>
-            <IconButton onClick={() => setDrawerVisibility(!drawerVisibility)}>
-              <MenuRoundedIcon style={{color: "white"}}/>
+    <Container className={classes.rootContainer}>
+      <AppBar
+        position="static"
+        className={drawerVisibility ? classes.appBar : ""}
+      >
+        <Toolbar className={classes.appBarToolbar}>
+          <IconButton onClick={() => setDrawerVisibility(!drawerVisibility)}>
+            <MenuRoundedIcon style={{ color: "white" }} />
+          </IconButton>
+          <Toolbar style={{ padding: 0 }}>
+            <IconButton onClick={() => setDialogOpen(true)}>
+              <AddTaskIcon style={{ color: "white" }} />
             </IconButton>
-            <Toolbar style={{padding: 0}}>
-              <IconButton onClick={() => setDialogOpen(true)}>
-                <AddTaskIcon style={{color: "white"}}/>
-              </IconButton>
-              <IconButton
-                  onClick={() => {
-                    localStorage.clear();
-                    history.push("/");
-                  }}
-              >
-                <PowerSettingsNewRounded style={{color: "white"}}/>
-              </IconButton>
-            </Toolbar>
+            <IconButton
+              onClick={() => {
+                localStorage.clear();
+                history.push("/");
+              }}
+            >
+              <PowerSettingsNewRounded style={{ color: "white" }} />
+            </IconButton>
           </Toolbar>
-        </AppBar>
-        <SwipeableDrawer
-            anchor="left"
-            open={drawerVisibility}
-            onClose={() => setDrawerVisibility(false)}
-            onOpen={() => setDrawerVisibility(true)}
-            disableDiscovery={iOS}
-            className={classes.drawer}
+        </Toolbar>
+      </AppBar>
+      <SwipeableDrawer
+        anchor="left"
+        open={drawerVisibility}
+        onClose={() => setDrawerVisibility(false)}
+        onOpen={() => setDrawerVisibility(true)}
+        disableDiscovery={iOS}
+        className={classes.drawer}
+      >
+        <div className={classes.toolbar} />
+        {loadingTenants ? (
+          <LinearProgress className={classes.drawerItem} />
+        ) : (
+          <List className={classes.drawerItem}>
+            {userTenants.map((tenant) => (
+              <ListItem
+                button
+                key={tenant.id}
+                selected={tenant.id === currentTenant.id || false}
+                onClick={() => setCurrentTenant(tenant)}
+              >
+                <ListItemIcon>
+                  <PeopleRoundedIcon />
+                </ListItemIcon>
+                <ListItemText>{tenant.name}</ListItemText>
+              </ListItem>
+            ))}
+          </List>
+        )}
+      </SwipeableDrawer>
+      <TaskChangedContext.Provider value={taskChangedHandler}>
+        <GridList
+          className={classes.boardsContainer}
+          cellHeight="auto"
+          cols={getGridListCols()}
         >
-          <div className={classes.toolbar}/>
-          {loadingTenants ? (
-              <LinearProgress className={classes.drawerItem}/>
-          ) : (
-              <List className={classes.drawerItem}>
-                {userTenants.map((tenant) => (
-                    <ListItem
-                        button
-                        key={tenant.id}
-                        selected={tenant.id === currentTenant.id || false}
-                        onClick={() => setCurrentTenant(tenant)}
-                    >
-                      <ListItemIcon>
-                        <PeopleRoundedIcon/>
-                      </ListItemIcon>
-                      <ListItemText>{tenant.name}</ListItemText>
-                    </ListItem>
-                ))}
-              </List>
-          )}
-        </SwipeableDrawer>
-        <TaskChangedContext.Provider value={taskChangedHandler}>
-          <GridList
-              className={classes.boardsContainer}
-              cellHeight="auto"
-              cols={getGridListCols()}
-          >
-            <GridListTile key={boards[0].name}>
-              <BoardComponent tasks={backlogTasks} title={boards[0].name}/>
-            </GridListTile>
-            <GridListTile key={boards[1].name}>
-              <BoardComponent tasks={todoTasks} title={boards[1].name}/>
-            </GridListTile>
-            <GridListTile key={boards[2].name}>
-              <BoardComponent tasks={inProgressTasks} title={boards[2].name}/>
-            </GridListTile>
-            <GridListTile key={boards[3].name}>
-              <BoardComponent tasks={underReviewTasks} title={boards[3].name}/>
-            </GridListTile>
-            <GridListTile key={boards[4].name}>
-              <BoardComponent tasks={doneTasks} title={boards[4].name}/>
-            </GridListTile>
-            <GridListTile key={boards[5].name}>
-              <BoardComponent tasks={archiveTasks} title={boards[5].name}/>
-            </GridListTile>
-          </GridList>
+          <GridListTile key={boards[0].name}>
+            <BoardComponent tasks={backlogTasks} title={boards[0].name} />
+          </GridListTile>
+          <GridListTile key={boards[1].name}>
+            <BoardComponent tasks={todoTasks} title={boards[1].name} />
+          </GridListTile>
+          <GridListTile key={boards[2].name}>
+            <BoardComponent tasks={inProgressTasks} title={boards[2].name} />
+          </GridListTile>
+          <GridListTile key={boards[3].name}>
+            <BoardComponent tasks={underReviewTasks} title={boards[3].name} />
+          </GridListTile>
+          <GridListTile key={boards[4].name}>
+            <BoardComponent tasks={doneTasks} title={boards[4].name} />
+          </GridListTile>
+          <GridListTile key={boards[5].name}>
+            <BoardComponent tasks={archiveTasks} title={boards[5].name} />
+          </GridListTile>
+        </GridList>
 
-          <AddTaskComponent
-              onDialogClose={() => setDialogOpen(false)}
-              dialogOpen={dialogOpen}
-              currentTenantId={currentTenant.id || ""}
-          />
-        </TaskChangedContext.Provider>
+        <AddTaskComponent
+          onDialogClose={() => setDialogOpen(false)}
+          dialogOpen={dialogOpen}
+          currentTenantId={currentTenant.id || ""}
+        />
+      </TaskChangedContext.Provider>
 
-        <Snackbar
-            open={toastOpen}
-            autoHideDuration={error ? 6000 : 2000}
-            onClose={() => setToastOpen(false)}
+      <Snackbar
+        open={toastOpen}
+        autoHideDuration={error ? 6000 : 2000}
+        onClose={() => setToastOpen(false)}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          severity={error ? "error" : "success"}
         >
-          <MuiAlert
-              elevation={6}
-              variant="filled"
-              severity={error ? "error" : "success"}
-          >
-            {error && errorMessage}
-          </MuiAlert>
-        </Snackbar>
-      </Container>
+          {error && errorMessage}
+        </MuiAlert>
+      </Snackbar>
+    </Container>
   );
 }
