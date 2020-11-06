@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import TextField from "@material-ui/core/TextField";
 import Card from "@material-ui/core/Card";
-import { CardContent, CardMedia } from "@material-ui/core";
+import {CardContent, CardMedia} from "@material-ui/core";
 import KanbanImage from "../../assets/kanban-board.jpg";
-import { useHistory } from "react-router-dom";
-import { signIn } from "../../services/auth-service";
+import {useHistory} from "react-router-dom";
+import {signIn} from "../../services/auth-service";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import ReactiveButton from "../reactive-button/reactive-button";
@@ -97,9 +97,9 @@ export default function SignInComponent() {
               disabled={loading}
             />
             <ReactiveButton
-              title="Sign in"
-              onClick={() => _signIn({ username: email, password })}
-              loading={loading}
+                title="Sign in"
+                onClick={() => _signIn({email, password})}
+                loading={loading}
             />
 
             {/*<Link href={`${loginLink}`} variant="body2" className={classes.centerLink}>*/}

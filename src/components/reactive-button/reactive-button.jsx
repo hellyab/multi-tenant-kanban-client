@@ -3,31 +3,28 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 
-
 export default function ReactiveButton({loading, onClick, title}) {
-    const useStyles = makeStyles((theme) => (
-        {
-            wrapper: {
-                margin: theme.spacing(1),
-                position: 'relative',
-            },
-            buttonProgress: {
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                marginTop: -9,
-                marginLeft: -12,
-            },
-            submit: {
-                margin: theme.spacing(3, 0, 2),
-            },
-        }
-    ))
+  const useStyles = makeStyles((theme) => ({
+    wrapper: {
+      margin: theme.spacing(1),
+      position: "relative",
+    },
+    buttonProgress: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      marginTop: -9,
+      marginLeft: -12,
+    },
+    submit: {
+      margin: theme.spacing(3, 0, 2),
+    },
+  }));
 
-    const classes = useStyles()
+  const classes = useStyles();
 
-    return <div className={classes.wrapper}>
-
+  return (
+      <div className={classes.wrapper}>
         <Button
             fullWidth
             variant="contained"
@@ -37,8 +34,11 @@ export default function ReactiveButton({loading, onClick, title}) {
             onClick={onClick}
             size="large"
         >
-            {title}
+          {title}
         </Button>
-        {loading && <CircularProgress size={24} className={classes.buttonProgress}/>}
-    </div>
+        {loading && (
+            <CircularProgress size={24} className={classes.buttonProgress}/>
+        )}
+      </div>
+  );
 }
