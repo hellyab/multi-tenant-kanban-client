@@ -1,5 +1,9 @@
 import {axiosInstance} from "./constants";
 
+export const setAuthHeader = (token) => {
+  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+};
+
 export const signIn = ({email, password}) => {
   const req = new Request(`${process.env.REACT_APP_API_URL}/users/login`, {
     method: "POST",
@@ -43,8 +47,4 @@ export const refreshToken = () => {
     localStorage.setItem("token", resJSON.accessToken);
     return Promise.resolve(resJSON);
   });
-};
-
-export const setAuthHeader = (token) => {
-  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };

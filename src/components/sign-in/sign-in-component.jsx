@@ -84,17 +84,17 @@ export default function SignInComponent() {
               disabled={loading}
             />
             <TextField
-              variant="outlined"
-              margin="normal"
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              disabled={loading}
+                variant="outlined"
+                margin="normal"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                disabled={loading}
             />
             <ReactiveButton
                 title="Sign in"

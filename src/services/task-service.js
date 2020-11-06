@@ -1,4 +1,4 @@
-import { _axios } from "./constants";
+import {_axios} from "./constants";
 
 export const getTasks = (tenantId, taskColumn) => {
   const request = {
@@ -8,7 +8,7 @@ export const getTasks = (tenantId, taskColumn) => {
       filter: {
         where: {
           group: taskColumn,
-          tenantId: tenantId,
+          tenantId,
         },
       },
     },

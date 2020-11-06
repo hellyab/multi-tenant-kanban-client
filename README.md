@@ -1,8 +1,5 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/f15aff72-0145-4857-a7d6-30bc4926206b/deploy-status)](https://app.netlify.com/sites/mutlti-tenant-kanban-client/deploys)
 
-
-
-
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

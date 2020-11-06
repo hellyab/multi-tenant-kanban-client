@@ -5,14 +5,14 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import React, { useContext, useState } from "react";
+import React, {useContext, useState} from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import { boards, userId } from "../../services/constants";
+import {boards, userId} from "../../services/constants";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
-import { createTask } from "../../services/task-service";
+import {createTask} from "../../services/task-service";
 import ReactiveButton from "../reactive-button/reactive-button";
-import { TaskChangedContext } from "../../pages/dashboard/dashboard";
+import {TaskChangedContext} from "../../pages/dashboard/dashboard";
 
 export default function AddTaskComponent({
   dialogOpen,
@@ -103,11 +103,11 @@ export default function AddTaskComponent({
             onClick={async () => {
               setLoading(true);
               await createTask({
-                title: title,
-                description: description,
-                group: board,
-                tenantId: currentTenantId,
-                userId: userId(),
+                  title,
+                  description,
+                  group: board,
+                  tenantId: currentTenantId,
+                  userId: userId(),
               })
                 .then((res) => {
                   setError(false);

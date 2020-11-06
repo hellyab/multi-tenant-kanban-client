@@ -1,9 +1,9 @@
-import jwt_decode from "jwt-decode";
-import { _axios } from "./constants";
+import jwtDecode from "jwt-decode";
+import {_axios} from "./constants";
 
 export const getUserInfoFromToken = () => {
   const token = localStorage.getItem("token");
-  return jwt_decode(token);
+  return jwtDecode(token);
 };
 
 export const createUser = (user) => {

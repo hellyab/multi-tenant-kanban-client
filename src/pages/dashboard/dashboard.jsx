@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import {
-  Container,
-  GridList,
-  GridListTile,
-  IconButton,
-  isWidthUp,
-} from "@material-ui/core";
+import React, {useEffect, useState} from "react";
+import {useHistory} from "react-router-dom";
+import {Container, GridList, GridListTile, IconButton, isWidthUp,} from "@material-ui/core";
 import BoardComponent from "../../components/board/board-component";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
@@ -21,21 +15,21 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import useTheme from "@material-ui/core/styles/useTheme";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddTaskIcon from "@material-ui/icons/PlaylistAddRounded";
-import { getUserTenants } from "../../services/user-tenant-service";
-import { boards, usePrevious, userId } from "../../services/constants";
+import {getUserTenants} from "../../services/user-tenant-service";
+import {boards, usePrevious, userId} from "../../services/constants";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { getUserInfoFromToken } from "../../services/user-service";
-import { getTasks } from "../../services/task-service";
+import {getUserInfoFromToken} from "../../services/user-service";
+import {getTasks} from "../../services/task-service";
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import AddTaskComponent from "../../components/add-task/add-task-component";
 import _ from "lodash";
-import { PowerSettingsNewRounded } from "@material-ui/icons";
+import {PowerSettingsNewRounded} from "@material-ui/icons";
 
 function useWidth() {
-  const theme = useTheme();
-  const keys = [...theme.breakpoints.keys].reverse();
-  return (
+    const theme = useTheme();
+    const keys = [...theme.breakpoints.keys].reverse();
+    return (
     keys.reduce((output, key) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const matches = useMediaQuery(theme.breakpoints.up(key));
@@ -88,33 +82,6 @@ export default function Dashboard() {
 
   const width = useWidth();
 
-  const taskChangedHandler = (source, destination) => {
-    console.log(source, destination);
-    if (source === boards[0].name || destination === boards[0].name) {
-      setBacklogChanged((prevState) => prevState + 1);
-    }
-
-    if (source === boards[1].name || destination === boards[1].name) {
-      setTodoChanged((prevState) => prevState + 1);
-    }
-
-    if (source === boards[2].name || destination === boards[2].name) {
-      setInProgressChanged((prevState) => prevState + 1);
-    }
-
-    if (source === boards[3].name || destination === boards[3].name) {
-      setUnderReviewChanged((prevState) => prevState + 1);
-    }
-
-    if (source === boards[4].name || destination === boards[4].name) {
-      setDoneChanged((prevState) => prevState + 1);
-    }
-
-    if (source === boards[5].name || destination === boards[5].name) {
-      setArchiveChanged((prevState) => prevState + 1);
-    }
-  };
-
   const history = useHistory();
 
   //STATE
@@ -135,24 +102,50 @@ export default function Dashboard() {
   const [doneTasks, setDoneTasks] = useState([]);
   const [archiveTasks, setArchiveTasks] = useState([]);
 
-  //STATE.TaskChangeTrackers
+    //STATE.TaskChangeTrackers
 
-  const [backlogChanged, setBacklogChanged] = useState(0);
-  const [todoChanged, setTodoChanged] = useState(0);
-  const [inProgressChanged, setInProgressChanged] = useState([]);
-  const [underReviewChanged, setUnderReviewChanged] = useState([]);
-  const [doneChanged, setDoneChanged] = useState([]);
-  const [archiveChanged, setArchiveChanged] = useState([]);
+    const [backlogChanged, setBacklogChanged] = useState(0);
+    const [todoChanged, setTodoChanged] = useState(0);
+    const [inProgressChanged, setInProgressChanged] = useState([]);
+    const [underReviewChanged, setUnderReviewChanged] = useState([]);
+    const [doneChanged, setDoneChanged] = useState([]);
+    const [archiveChanged, setArchiveChanged] = useState([]);
 
-  const prevTenant = usePrevious(currentTenant);
-  const prevTenants = usePrevious(userTenants);
+    const taskChangedHandler = (source, destination) => {
+        if (source === boards[0].name || destination === boards[0].name) {
+            setBacklogChanged((prevState) => prevState + 1);
+        }
 
-  //UserTenant effect
-  useEffect(() => {
-    if (
-      !_.isEqual(prevTenants, userTenants) &&
-      !_.isEqual(prevTenant, currentTenant)
-    ) {
+        if (source === boards[1].name || destination === boards[1].name) {
+            setTodoChanged((prevState) => prevState + 1);
+        }
+
+        if (source === boards[2].name || destination === boards[2].name) {
+            setInProgressChanged((prevState) => prevState + 1);
+        }
+
+        if (source === boards[3].name || destination === boards[3].name) {
+            setUnderReviewChanged((prevState) => prevState + 1);
+        }
+
+        if (source === boards[4].name || destination === boards[4].name) {
+            setDoneChanged((prevState) => prevState + 1);
+        }
+
+        if (source === boards[5].name || destination === boards[5].name) {
+            setArchiveChanged((prevState) => prevState + 1);
+        }
+    };
+
+    const prevTenant = usePrevious(currentTenant);
+    const prevTenants = usePrevious(userTenants);
+
+    //UserTenant effect
+    useEffect(() => {
+        if (
+            !_.isEqual(prevTenants, userTenants) &&
+            !_.isEqual(prevTenant, currentTenant)
+        ) {
       setLoadingTenants(true);
       getUserTenants(userId())
         .then((res) => {
@@ -163,7 +156,6 @@ export default function Dashboard() {
           );
         })
         .catch((error) => {
-          console.log(error);
           setUserTenants([]);
           setCurrentTenant({});
           setErrorMessage(error);
@@ -179,7 +171,6 @@ export default function Dashboard() {
     if (!_.isEmpty(currentTenant)) {
       getTasks(currentTenant.id, boards[0].name)
         .then((res) => {
-          console.log(res);
           setBacklogTasks(res);
         })
         .catch((e) => {
@@ -196,7 +187,6 @@ export default function Dashboard() {
     if (!_.isEmpty(currentTenant)) {
       getTasks(currentTenant.id, boards[1].name)
         .then((res) => {
-          console.log(res);
           setTodoTasks(res);
         })
         .catch((e) => {
@@ -213,7 +203,6 @@ export default function Dashboard() {
     if (!_.isEmpty(currentTenant)) {
       getTasks(currentTenant.id, boards[2].name)
         .then((res) => {
-          console.log(res);
           setInProgressTasks(res);
         })
         .catch((e) => {
@@ -230,7 +219,6 @@ export default function Dashboard() {
     if (!_.isEmpty(currentTenant)) {
       getTasks(currentTenant.id, boards[3].name)
         .then((res) => {
-          console.log(res);
           setUnderReviewTasks(res);
         })
         .catch((e) => {
@@ -247,7 +235,6 @@ export default function Dashboard() {
     if (!_.isEmpty(currentTenant)) {
       getTasks(currentTenant.id, boards[4].name)
         .then((res) => {
-          console.log(res);
           setDoneTasks(res);
         })
         .catch((e) => {
@@ -262,10 +249,8 @@ export default function Dashboard() {
   //Archive effect
   useEffect(() => {
     if (!_.isEmpty(currentTenant)) {
-      console.log(currentTenant);
       getTasks(currentTenant.id, boards[5].name)
         .then((res) => {
-          console.log(res);
           setArchiveTasks(res);
         })
         .catch((e) => {
