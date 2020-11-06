@@ -67,6 +67,7 @@ const initialFormValues = {
   },
 };
 
+/*eslint complexity: ["error", 10]*/
 function formReducer(state, action) {
   switch (action.type) {
     case "email":

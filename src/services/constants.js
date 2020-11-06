@@ -1,4 +1,4 @@
-import jwt_decode from "jwt-decode";
+import jwtDecode from "jwt-decode";
 import axios from "axios";
 import qs from "qs";
 import { useEffect, useRef } from "react";
@@ -8,7 +8,7 @@ export const authorizationHeader = {
 };
 
 //USER ID
-export const userId = () => jwt_decode(localStorage.getItem("token")).id;
+export const userId = () => jwtDecode(localStorage.getItem("token")).id;
 
 //HTTP REQUEST
 export const axiosInstance = axios.create();

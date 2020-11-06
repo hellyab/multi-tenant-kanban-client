@@ -50,6 +50,7 @@ const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
 //CONTEXT
 export const TaskChangedContext = React.createContext({});
 
+/*eslint complexity: ["error", 10]*/
 export default function Dashboard() {
   const useStyles = makeStyles((theme) => ({
     rootContainer: {
@@ -88,6 +89,21 @@ export default function Dashboard() {
 
   const width = useWidth();
 
+  /*eslint complexity: ["error", 10]*/
+  const getGridListCols = () => {
+    if (isWidthUp("xl", width)) {
+      return 5;
+    } else if (isWidthUp("lg", width)) {
+      return 4;
+    } else if (isWidthUp("md", width)) {
+      return 3;
+    } else if (isWidthUp("sm", width)) {
+      return 2;
+    }
+
+    return 1;
+  };
+
   const history = useHistory();
 
   //STATE
@@ -117,6 +133,7 @@ export default function Dashboard() {
   const [doneChanged, setDoneChanged] = useState([]);
   const [archiveChanged, setArchiveChanged] = useState([]);
 
+  /*eslint complexity: ["error", 15]*/
   const taskChangedHandler = (source, destination) => {
     if (source === boards[0].name || destination === boards[0].name) {
       setBacklogChanged((prevState) => prevState + 1);
@@ -268,19 +285,6 @@ export default function Dashboard() {
     }
   }, [currentTenant, archiveChanged]);
 
-  const getGridListCols = () => {
-    if (isWidthUp("xl", width)) {
-      return 5;
-    } else if (isWidthUp("lg", width)) {
-      return 4;
-    } else if (isWidthUp("md", width)) {
-      return 3;
-    } else if (isWidthUp("sm", width)) {
-      return 2;
-    }
-
-    return 1;
-  };
   return (
     <Container className={classes.rootContainer}>
       <AppBar
