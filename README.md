@@ -1,4 +1,5 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/f15aff72-0145-4857-a7d6-30bc4926206b/deploy-status)](https://app.netlify.com/sites/mutlti-tenant-kanban-client/deploys)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/29bb82c5eeb044bab44b8727fc00ab79)](https://www.codacy.com/gh/hellyab/multi-tenant-kanban-client/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hellyab/multi-tenant-kanban-client&amp;utm_campaign=Badge_Grade)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
