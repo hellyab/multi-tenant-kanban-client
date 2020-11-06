@@ -69,19 +69,19 @@ export default function SignInComponent() {
         <div className={classes.paper}>
           <div className={classes.form}>
             <TextField
-              variant="outlined"
-              margin="normal"
-              onChange={(e) => {
+                variant="outlined"
+                margin="normal"
+                onChange={(e) => {
                 setEmail(e.target.value);
               }}
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              disabled={loading}
+                required
+                fullWidth
+                id="email"
+                label="Email"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                disabled={loading}
             />
             <TextField
                 variant="outlined"

@@ -95,7 +95,7 @@ export default function SignUpComponent() {
   const [formState, formDispatch] = useReducer(
     formReducer,
     initialFormValues,
-      null
+    null
   );
 
   const history = useHistory();

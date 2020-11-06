@@ -27,14 +27,14 @@ import _ from "lodash";
 import {PowerSettingsNewRounded} from "@material-ui/icons";
 
 function useWidth() {
-    const theme = useTheme();
-    const keys = [...theme.breakpoints.keys].reverse();
-    return (
-    keys.reduce((output, key) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const matches = useMediaQuery(theme.breakpoints.up(key));
-      return !output && matches ? key : output;
-    }, null) || "xs"
+  const theme = useTheme();
+  const keys = [...theme.breakpoints.keys].reverse();
+  return (
+      keys.reduce((output, key) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const matches = useMediaQuery(theme.breakpoints.up(key));
+        return !output && matches ? key : output;
+      }, null) || "xs"
   );
 }
 
@@ -102,60 +102,60 @@ export default function Dashboard() {
   const [doneTasks, setDoneTasks] = useState([]);
   const [archiveTasks, setArchiveTasks] = useState([]);
 
-    //STATE.TaskChangeTrackers
+  //STATE.TaskChangeTrackers
 
-    const [backlogChanged, setBacklogChanged] = useState(0);
-    const [todoChanged, setTodoChanged] = useState(0);
-    const [inProgressChanged, setInProgressChanged] = useState([]);
-    const [underReviewChanged, setUnderReviewChanged] = useState([]);
-    const [doneChanged, setDoneChanged] = useState([]);
-    const [archiveChanged, setArchiveChanged] = useState([]);
+  const [backlogChanged, setBacklogChanged] = useState(0);
+  const [todoChanged, setTodoChanged] = useState(0);
+  const [inProgressChanged, setInProgressChanged] = useState([]);
+  const [underReviewChanged, setUnderReviewChanged] = useState([]);
+  const [doneChanged, setDoneChanged] = useState([]);
+  const [archiveChanged, setArchiveChanged] = useState([]);
 
-    const taskChangedHandler = (source, destination) => {
-        if (source === boards[0].name || destination === boards[0].name) {
-            setBacklogChanged((prevState) => prevState + 1);
-        }
+  const taskChangedHandler = (source, destination) => {
+    if (source === boards[0].name || destination === boards[0].name) {
+      setBacklogChanged((prevState) => prevState + 1);
+    }
 
-        if (source === boards[1].name || destination === boards[1].name) {
-            setTodoChanged((prevState) => prevState + 1);
-        }
+    if (source === boards[1].name || destination === boards[1].name) {
+      setTodoChanged((prevState) => prevState + 1);
+    }
 
-        if (source === boards[2].name || destination === boards[2].name) {
-            setInProgressChanged((prevState) => prevState + 1);
-        }
+    if (source === boards[2].name || destination === boards[2].name) {
+      setInProgressChanged((prevState) => prevState + 1);
+    }
 
-        if (source === boards[3].name || destination === boards[3].name) {
-            setUnderReviewChanged((prevState) => prevState + 1);
-        }
+    if (source === boards[3].name || destination === boards[3].name) {
+      setUnderReviewChanged((prevState) => prevState + 1);
+    }
 
-        if (source === boards[4].name || destination === boards[4].name) {
-            setDoneChanged((prevState) => prevState + 1);
-        }
+    if (source === boards[4].name || destination === boards[4].name) {
+      setDoneChanged((prevState) => prevState + 1);
+    }
 
-        if (source === boards[5].name || destination === boards[5].name) {
-            setArchiveChanged((prevState) => prevState + 1);
-        }
-    };
+    if (source === boards[5].name || destination === boards[5].name) {
+      setArchiveChanged((prevState) => prevState + 1);
+    }
+  };
 
-    const prevTenant = usePrevious(currentTenant);
-    const prevTenants = usePrevious(userTenants);
+  const prevTenant = usePrevious(currentTenant);
+  const prevTenants = usePrevious(userTenants);
 
-    //UserTenant effect
-    useEffect(() => {
-        if (
-            !_.isEqual(prevTenants, userTenants) &&
-            !_.isEqual(prevTenant, currentTenant)
-        ) {
+  //UserTenant effect
+  useEffect(() => {
+    if (
+        !_.isEqual(prevTenants, userTenants) &&
+        !_.isEqual(prevTenant, currentTenant)
+    ) {
       setLoadingTenants(true);
       getUserTenants(userId())
-        .then((res) => {
-          setUserTenants(() => res);
-          const user = getUserInfoFromToken();
-          setCurrentTenant(() =>
-            res.find((tenant) => tenant.id === user.defaultTenant)
-          );
-        })
-        .catch((error) => {
+          .then((res) => {
+            setUserTenants(() => res);
+            const user = getUserInfoFromToken();
+            setCurrentTenant(() =>
+                res.find((tenant) => tenant.id === user.defaultTenant)
+            );
+          })
+          .catch((error) => {
           setUserTenants([]);
           setCurrentTenant({});
           setErrorMessage(error);

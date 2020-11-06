@@ -72,9 +72,9 @@ export default function TaskComponent({task}) {
           setError(false);
           setToastMessage(`Task successfully moved to ${destinationBoard}`);
           setToastOpen(true);
-        setLoading(false);
-        hidePopover();
-      })
+          setLoading(false);
+          hidePopover();
+        })
       .catch((error) => {
         setError(true);
         setToastMessage(error.message);
