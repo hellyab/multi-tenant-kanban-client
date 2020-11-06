@@ -1,7 +1,7 @@
-import React, {useReducer, useState} from "react";
+import React, { useReducer, useState } from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Card from "@material-ui/core/Card";
-import {CardContent, CardMedia, Divider, Typography} from "@material-ui/core";
+import { CardContent, CardMedia, Divider, Typography } from "@material-ui/core";
 import KanbanImage from "../../assets/kanban.jpg";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -10,10 +10,10 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import ReactiveButton from "../reactive-button/reactive-button";
-import {createUser} from "../../services/user-service";
+import { createUser } from "../../services/user-service";
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {

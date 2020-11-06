@@ -1,4 +1,4 @@
-import {_axios} from "./constants";
+import { _axios } from "./constants";
 
 export const getUserTenants = (id) => {
   const request = {

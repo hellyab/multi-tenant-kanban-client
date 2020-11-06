@@ -1,8 +1,14 @@
-import React, {useEffect, useState} from "react";
-import {useHistory} from "react-router-dom";
-import {Container, GridList, GridListTile, IconButton, isWidthUp,} from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import {
+  Container,
+  GridList,
+  GridListTile,
+  IconButton,
+  isWidthUp,
+} from "@material-ui/core";
 import BoardComponent from "../../components/board/board-component";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
@@ -15,26 +21,26 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import useTheme from "@material-ui/core/styles/useTheme";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddTaskIcon from "@material-ui/icons/PlaylistAddRounded";
-import {getUserTenants} from "../../services/user-tenant-service";
-import {boards, usePrevious, userId} from "../../services/constants";
+import { getUserTenants } from "../../services/user-tenant-service";
+import { boards, usePrevious, userId } from "../../services/constants";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import {getUserInfoFromToken} from "../../services/user-service";
-import {getTasks} from "../../services/task-service";
+import { getUserInfoFromToken } from "../../services/user-service";
+import { getTasks } from "../../services/task-service";
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import AddTaskComponent from "../../components/add-task/add-task-component";
 import _ from "lodash";
-import {PowerSettingsNewRounded} from "@material-ui/icons";
+import { PowerSettingsNewRounded } from "@material-ui/icons";
 
 function useWidth() {
   const theme = useTheme();
   const keys = [...theme.breakpoints.keys].reverse();
   return (
-      keys.reduce((output, key) => {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const matches = useMediaQuery(theme.breakpoints.up(key));
-        return !output && matches ? key : output;
-      }, null) || "xs"
+    keys.reduce((output, key) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const matches = useMediaQuery(theme.breakpoints.up(key));
+      return !output && matches ? key : output;
+    }, null) || "xs"
   );
 }
 
@@ -143,19 +149,19 @@ export default function Dashboard() {
   //UserTenant effect
   useEffect(() => {
     if (
-        !_.isEqual(prevTenants, userTenants) &&
-        !_.isEqual(prevTenant, currentTenant)
+      !_.isEqual(prevTenants, userTenants) &&
+      !_.isEqual(prevTenant, currentTenant)
     ) {
       setLoadingTenants(true);
       getUserTenants(userId())
-          .then((res) => {
-            setUserTenants(() => res);
-            const user = getUserInfoFromToken();
-            setCurrentTenant(() =>
-                res.find((tenant) => tenant.id === user.defaultTenant)
-            );
-          })
-          .catch((error) => {
+        .then((res) => {
+          setUserTenants(() => res);
+          const user = getUserInfoFromToken();
+          setCurrentTenant(() =>
+            res.find((tenant) => tenant.id === user.defaultTenant)
+          );
+        })
+        .catch((error) => {
           setUserTenants([]);
           setCurrentTenant({});
           setErrorMessage(error);

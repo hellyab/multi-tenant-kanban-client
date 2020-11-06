@@ -1,10 +1,10 @@
-import {axiosInstance} from "./constants";
+import { axiosInstance } from "./constants";
 
 export const setAuthHeader = (token) => {
   axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };
 
-export const signIn = ({email, password}) => {
+export const signIn = ({ email, password }) => {
   const req = new Request(`${process.env.REACT_APP_API_URL}/users/login`, {
     method: "POST",
     body: JSON.stringify({

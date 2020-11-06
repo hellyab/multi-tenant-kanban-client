@@ -1,9 +1,14 @@
 import React from "react";
-import {BrowserRouter as Router, Redirect, Route, Switch,} from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 import SignInSignUp from "./pages/sign-in-sing-up/sign-in-sign-up";
 import Dashboard from "./pages/dashboard/dashboard";
 import PrivateRouteComponent from "./components/private-route/private-route-component";
-import {setAuthHeader} from "./services/auth-service";
+import { setAuthHeader } from "./services/auth-service";
 
 function App() {
   const FourOhFour = () => <div>404: Page not found</div>;

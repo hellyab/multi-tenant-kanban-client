@@ -1,12 +1,24 @@
 import React from "react";
-import {Button, ButtonGroup, Container, IconButton, Toolbar,} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
-import {Route, Router, Switch, useHistory, useLocation,} from "react-router-dom";
+import {
+  Button,
+  ButtonGroup,
+  Container,
+  IconButton,
+  Toolbar,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  Route,
+  Router,
+  Switch,
+  useHistory,
+  useLocation,
+} from "react-router-dom";
 import SignUpComponent from "../../components/sign-up/sign-up-component";
 import SignInComponent from "../../components/sign-in/sign-in-component";
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
-import {CopyrightComponent} from "../../components/copyright/copyright-component";
+import { CopyrightComponent } from "../../components/copyright/copyright-component";
 import AssignmentTurnedInRoundedIcon from "@material-ui/icons/AssignmentTurnedInRounded";
 
 const useStyle = makeStyles((theme) => ({

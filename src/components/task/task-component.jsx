@@ -1,20 +1,25 @@
-import {CardContent, Divider, IconButton, Typography,} from "@material-ui/core";
+import {
+  CardContent,
+  Divider,
+  IconButton,
+  Typography,
+} from "@material-ui/core";
 import CardActions from "@material-ui/core/CardActions";
 import MoreVertRoundedIcon from "@material-ui/icons/MoreVertRounded";
 import Popover from "@material-ui/core/Popover";
 import Card from "@material-ui/core/Card";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import {boards} from "../../services/constants";
+import { boards } from "../../services/constants";
 import TextField from "@material-ui/core/TextField";
-import React, {useContext, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {TaskChangedContext} from "../../pages/dashboard/dashboard";
-import {updateTask} from "../../services/task-service";
+import React, { useContext, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { TaskChangedContext } from "../../pages/dashboard/dashboard";
+import { updateTask } from "../../services/task-service";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import ReactiveButton from "../reactive-button/reactive-button";
 
-export default function TaskComponent({task}) {
+export default function TaskComponent({ task }) {
   const useStyles = makeStyles((theme) => ({
     taskCard: {
       margin: theme.spacing(1),
@@ -68,13 +73,13 @@ export default function TaskComponent({task}) {
     const source = task.group;
     task.group = destinationBoard;
     await updateTask(task)
-        .then(() => {
-          setError(false);
-          setToastMessage(`Task successfully moved to ${destinationBoard}`);
-          setToastOpen(true);
-          setLoading(false);
-          hidePopover();
-        })
+      .then(() => {
+        setError(false);
+        setToastMessage(`Task successfully moved to ${destinationBoard}`);
+        setToastOpen(true);
+        setLoading(false);
+        hidePopover();
+      })
       .catch((error) => {
         setError(true);
         setToastMessage(error.message);
